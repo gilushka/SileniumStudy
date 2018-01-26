@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by user on 17.01.2018.
  */
-public class firsttest {
+public class notWorkTest {
     WebDriver driver;
     String baseURL;
 
