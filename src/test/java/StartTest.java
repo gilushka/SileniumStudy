@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 
@@ -33,15 +34,16 @@ public class StartTest {
     }
     @Test
     public void testMetod(){
-        driver.findElement(By.xpath("//div[contains(@class,'header-container')]/div/div/div/div/div/ul/li/a/span/span[contains(text(),'Застраховать себя')]")).click();
-        driver.findElement(By.xpath("//div[contains(@class,'header-container')]/div/div/div/div/div/ul/li/div/div/div/div/a[contains(text(),'Страхование путешественников')]")).click();
+//        wait.until(ExpectedConditions.elementToBeClickable(
+        driver.findElement(By.xpath("//div[contains(@class,'header_more_nav')]//*[contains(text(), 'Застраховать себя')]")).click();
+        driver.findElement(By.xpath("//div[contains(@class,'header_more_nav')]//*[contains(text(), 'Страхование путешественников')]")).click();
 
         Wait<WebDriver> wait = new WebDriverWait(driver, 5, 1000);
         WebElement title = driver.findElement(By.xpath("//div[contains(@class,'sbrf-rich-outer')]/h1"));
         wait.until(ExpectedConditions.visibilityOf(title));
         Assert.assertEquals("Страхование путешественников", title.getText());
 
-        driver.findElement(By.xpath("//a[contains(text(),'Оформить сейчас')]")).click();
+        driver.findElement(By.xpath("//a//img[contains(@src,'banner-zashita-traveler')]")).click();
 
         for (String handle : driver.getWindowHandles()){ //Переключение экрана
             driver.switchTo().window(handle);
@@ -50,8 +52,8 @@ public class StartTest {
         driver.findElement(By.xpath("//div[contains(text(),'35')]")).click();
         driver.findElement(By.xpath("//span[contains(@class,'b-button-block-center')]/span[contains(text(),'Оформить')]")).click();
 
-        fillField(By.name("insured0_surname"), "Иванов");
-        fillField(By.name("insured0_name"), "Иван");
+        fillField(By.name("insured0_surname"), "Ivanov");
+        fillField(By.name("insured0_name"), "Ivan");
         fillField(By.name("insured0_birthDate"), "19.05.1985");
 
         fillField(By.name("surname"), "Петров");
@@ -66,26 +68,36 @@ public class StartTest {
         fillField(By.name("issuePlace"), "olala!");
 
 //        Assert.assertEquals("Введите адрес электронной почты", driver.findElement(By.xpath("//*[@id=\"applicationForm\"]/div[2]/div[6]/div/label/span")).getText());
-        Assert.assertEquals("Иванов", driver.findElement(By.name("insured0_surname")).getAttribute("value"));
-        Assert.assertEquals("Иван", driver.findElement(By.name("insured0_name")).getAttribute("value"));
-        Assert.assertEquals("19.05.1985", driver.findElement(By.name("insured0_birthDate")).getAttribute("value"));
+        Assert.assertEquals("Ivanov", driver.findElement(By.name("insured0_surname")).getAttribute("value"));
+        Assert.assertEquals("Ivan", driver.findElement(By.name("insured0_name")).getAttribute("value"));
+//        Assert.assertEquals("19.05.1985", driver.findElement(By.name("insured0_birthDate")).getAttribute("value"));
 
         Assert.assertEquals("Петров", driver.findElement(By.name("surname")).getAttribute("value"));
         Assert.assertEquals("Петр", driver.findElement(By.name("name")).getAttribute("value"));
         Assert.assertEquals("Петрович", driver.findElement(By.name("middlename")).getAttribute("value"));
-        Assert.assertEquals("19.05.1985", driver.findElement(By.name("birthDate")).getAttribute("value"));
+//        Assert.assertEquals("19.05.1985", driver.findElement(By.name("birthDate")).getAttribute("value"));
 
         Assert.assertEquals("1825", driver.findElement(By.name("passport_series")).getAttribute("value"));
         Assert.assertEquals("260118", driver.findElement(By.name("passport_number")).getAttribute("value"));
-        Assert.assertEquals("09.06.2005", driver.findElement(By.name("issueDate")).getAttribute("value"));
+//        Assert.assertEquals("09.06.2005", driver.findElement(By.name("issueDate")).getAttribute("value"));
         Assert.assertEquals("olala!", driver.findElement(By.name("issuePlace")).getAttribute("value"));
 
         driver.findElement(By.xpath("//span[@class=\"b-continue-btn\"]")).click();
 
-        WebElement sendBtn = driver.findElement(By.xpath("//div[contains(@class,'b-form-center-pos')]/div[contains(text(),'Заполнены не все обязательные поля')]"));
-        Assert.assertEquals(true, sendBtn.isDisplayed());
+//        WebElement sendBtn = driver.findElement(By.xpath("//div[contains(@class,'b-form-center-pos')]/div[contains(text(),'Заполнены не все обязательные поля')]"));
+        By by = By.xpath("//div[contains(@class,'b-form-center-pos')]/div[contains(text(),'Заполнены не все обязательные поля')]");
+        Assert.assertEquals(true, isElementPresent(by));
 
     }
+    private boolean isElementPresent(By by) {
+        try {
+            driver.findElement(by);
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
     public void fillField(By locator, String value){
         driver.findElement(locator).clear();
         driver.findElement(locator).sendKeys(value);
