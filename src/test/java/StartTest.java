@@ -34,11 +34,12 @@ public class StartTest {
     }
     @Test
     public void testMetod(){
-//        wait.until(ExpectedConditions.elementToBeClickable(
-        driver.findElement(By.xpath("//div[contains(@class,'header_more_nav')]//*[contains(text(), 'Застраховать себя')]")).click();
-        driver.findElement(By.xpath("//div[contains(@class,'header_more_nav')]//*[contains(text(), 'Страхование путешественников')]")).click();
-
         Wait<WebDriver> wait = new WebDriverWait(driver, 5, 1000);
+        wait.until(ExpectedConditions.elementToBeClickable(
+        driver.findElement(By.xpath("//div[contains(@class,'header_more_nav')]//*[contains(text(), 'Застраховать себя')]")))).click();
+        wait.until(ExpectedConditions.elementToBeClickable(
+        driver.findElement(By.xpath("//div[contains(@class,'header_more_nav')]//*[contains(text(), 'Страхование путешественников')]")))).click();
+
         WebElement title = driver.findElement(By.xpath("//div[contains(@class,'sbrf-rich-outer')]/h1"));
         wait.until(ExpectedConditions.visibilityOf(title));
         Assert.assertEquals("Страхование путешественников", title.getText());
@@ -59,6 +60,13 @@ public class StartTest {
         fillField(By.name("surname"), "Петров");
         fillField(By.name("name"), "Петр");
         fillField(By.name("middlename"), "Петрович");
+
+/*        @FindBy(name = "female")
+        public WebElement female;
+
+        @FindBy(name = "male")
+        public WebElement male;*/
+
         driver.findElement(By.name("//li[contains(@class,'alt-menu-collapser_opened')]/a/span/span[contains(text(),'Застраховать себя')]")).click();
         fillField(By.name("birthDate"), "19.05.1985");
 
@@ -89,7 +97,21 @@ public class StartTest {
         Assert.assertEquals(true, isElementPresent(by));
 
     }
-    private boolean isElementPresent(By by) {
+    public void sex(String value) {
+
+        switch (value) {
+            case "мужской":
+                male.click();
+                break;
+            case "женский":
+                female.click();
+                break;
+            default:
+                throw new AssertionError("Поле '" + value + "' отсутствует на странице");
+        }
+
+
+        private boolean isElementPresent(By by) {
         try {
             driver.findElement(by);
             return true;
